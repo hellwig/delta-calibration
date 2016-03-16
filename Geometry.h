@@ -55,6 +55,16 @@ void vectorSub(const Vector a, const Vector b, Vector c) {
     for (int x=0;x<3;x++) c[x]=a[x] - b[x];
 }
 
+double vectorLen(const Vector a) {
+    return sqrt(a[0]*a[0]+a[1]*a[1]+a[2]*a[2]);
+}
+
+double vectorDist(const Vector a, const Vector b) {
+    Vector d;
+    vectorSub(a,b,d);
+    return vectorLen(d);
+}
+
 void vectorSMult(const double a, const Vector b, Vector c) {
     for (int x=0;x<3;x++) c[x]=a * b[x];
 }
@@ -100,7 +110,7 @@ void tripleTowerToCenter(const Vector a, const Vector b, const Vector c, const d
     // Rotate Vector b to positive x-Axis
     double r, theta, phi;
     cartesianToSpherical(ob[0],ob[1],ob[2],r,theta,phi);
-    Matrix rotY, rotZ, rot;
+    Matrix rotY, rotZ, rot, rotb;
     getRotYMatrix(theta,rotY);
     getRotZMatrix(-phi,rotZ);
     matrixMult(rotY, rotZ, rot);
@@ -110,17 +120,31 @@ void tripleTowerToCenter(const Vector a, const Vector b, const Vector c, const d
     fprintf (stdout, "(%f|%f|%f)(%f|%f|%f)\n" ,ob[0],ob[1], ob[2],r, theta, phi);
     fprintf (stdout, "(%f|%f|%f)\n" ,rb[0],rb[1], rb[2]);
     fprintf (stdout, "(%f|%f|%f)\n" ,rc[0],rc[1], rc[2]);
+    // Rotate around x-Axis in a way that Vector c lies on the x-y-Plane
     double omega = atan2(rc[2],rc[1]);
     Matrix rotX;
     getRotXMatrix(-omega, rotX);
     Vector fc;
     matrixVectorMult(rotX, rc, fc);
-    fprintf (stdout, "(%f|%f|%f)\n" ,fc[0],fc[1], fc[2]);
-    // Rotate around x-Axis in a way that Vector c lies on the x-y-Plane
+    fprintf (stdout, "(%f|%f|%f)(%f)\n" ,fc[0],fc[1], fc[2],omega);
     // Calculate Center point
+    Vector ot;
+    ot[0]=(la*la-lb*lb+rb[0]*rb[0])/(2*rb[0]);
+    ot[1]=(la*la-lc*lc+fc[0]*fc[0]+fc[1]*fc[1]-2*fc[0]*ot[0])/(2*fc[1]);
+    ot[2]=-sqrt(la*la-ot[0]*ot[0]-ot[1]*ot[1]);
+    fprintf(stdout, "(%f|%f|%f)\n",ot[0], ot[1], ot[2]);
     // Rotate Center around x-Axis
     // Rotate Center back using Spherical coordinate angles
+    Vector os;
+    getRotXMatrix(omega, rotX);
+    getRotYMatrix(-theta,rotY);
+    getRotZMatrix(phi,rotZ);
+    matrixMult(rotZ, rotY, rot);
+    matrixMult(rot, rotX, rotb);
+    matrixVectorMult(rotb, ot, os);
+    fprintf(stdout, "(%f|%f|%f) %f=%f %f=%f %f=%f\n",os[0], os[1], os[2], la, vectorLen(os), lb, vectorDist(os,ob), lc, vectorDist(os,oc));
     // Move to the right offset
+    vectorAdd(os, a, center);
 }
 
 void CenterToTripleTower()
