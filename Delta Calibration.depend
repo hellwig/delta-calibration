@@ -1,0 +1,16 @@
+# depslib dependency file v1.0
+1458135404 source:c:\users\marc\google drive\projekte\delta calibration\geometry.h
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+
+1458075966 source:c:\users\marc\google drive\projekte\delta calibration\main.c
+	<windows.h>
+	<gl/gl.h>
+	"Geometry.h"
+
+1458136665 c:\users\marc\google drive\projekte\delta calibration\geometry.h
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+
