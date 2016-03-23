@@ -42,6 +42,10 @@
 		<Unit filename="Geometry.h">
 			<Option compile="1" />
 		</Unit>
+		<Unit filename="Printer.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Printer.h" />
 		<Unit filename="main.C">
 			<Option compilerVar="CC" />
 		</Unit>

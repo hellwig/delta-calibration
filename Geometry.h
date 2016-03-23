@@ -147,7 +147,11 @@ void tripleTowerToCenter(const Vector a, const Vector b, const Vector c, const d
     vectorAdd(os, a, center);
 }
 
-void CenterToTripleTower()
+void CenterToTripleTower(const Vector p,
+                         const Vector a, const Vector da, const double la,
+                         const Vector b, const Vector db, const double lb,
+                         const Vector c, const Vector dc, const double lc,
+                         double &ra, double &rb, double &rc)
 {
 
 }
